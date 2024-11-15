@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: order-service
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-id
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "br.com.order.order.dto"
+        spring.json.value.default.type: "br.com.order.order.dto.OrderDto"
+      auto-offset-reset: earliest
+
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+
+kafka:
+  topic:
+    name:
+      order-processing: order-processing
+      order-processed: order-processed
