@@ -1,7 +1,9 @@
 package br.com.order.order.service;
 
+import br.com.order.order.dto.GetOrdersDto;
 import br.com.order.order.dto.OrderDto;
 import br.com.order.order.dto.enums.OrderStatus;
+import br.com.order.order.exception.NotFoundException;
 import br.com.order.order.exception.OrderException;
 import br.com.order.order.kafka.OrderProducer;
 import br.com.order.order.kafka.RetryProducer;
@@ -14,6 +16,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -63,5 +68,18 @@ public class OrderService {
     return itens.stream()
         .map(item -> item.getUnitPrice().multiply(new BigDecimal(item.getAmount())))
         .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  public Page<GetOrdersDto> getAll(OrderStatus status, Pageable pageable) {
+    List<GetOrdersDto> orders = repository.findByStatus(status, pageable).getContent()
+        .stream()
+        .map(mapper::orderToGetOrderDto).toList();
+    return new PageImpl<>(orders, pageable, orders.size());
+  }
+
+  public GetOrdersDto find(String orderId) {
+    Order order = repository.findByOrderId(orderId)
+        .orElseThrow(() -> new NotFoundException("Order not found."));
+    return mapper.orderToGetOrderDto(order);
   }
 }

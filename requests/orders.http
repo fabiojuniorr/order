@@ -1,0 +1,7 @@
+### Obter pedidos por situação
+GET {{host}}/orders?status=FINALIZED
+Content-Type: application/json
+
+### Obter pedido por ID
+GET {{host}}/orders/C7891011
+Content-Type: application/json
