@@ -60,3 +60,15 @@ Certifique-se de ter as ferramentas abaixo instaladas:
 1. Clone o repositório:
    ```bash
    git clone https://github.com/fabiojuniorr/order.git
+
+2. Compile e construa o projeto:
+
+   ```bash
+   ./gradlew clean build
+
+3. Execute a aplicação localmente:
+
+   ```bash
+   java -jar build/libs/order-0.0.1-SNAPSHOT.jar
+
+
