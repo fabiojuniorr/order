@@ -30,4 +30,6 @@ public class OrderDto {
 
   @NotEmpty(message = "The item list cannot be empty.")
   private List<Item> itens;
+
+  private int numberAttempt;
 }

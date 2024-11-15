@@ -28,24 +28,28 @@ public class OrderService {
 
   public void orderProcess(OrderDto orderDto) {
     try {
-      repository.findByOrderId(orderDto.getOrderId())
-          .ifPresent((it) -> {
-            throw new OrderException("Order %s already registered".formatted(orderDto.getOrderId()));
-          });
-
-      validateOrderDate(orderDto.getCreatedAt());
-      BigDecimal totalValue = calculateTotalPrice(orderDto.getItens());
-
-      Order order = mapper.toEntity(orderDto, totalValue, OrderStatus.FINALIZED);
-
-      repository.save(order);
+      Order order = process(orderDto);
       orderProducer.publish(order);
     } catch (OrderException e) {
       log.error(e.getMessage());
     } catch (Exception e) {
-      log.error(e.getMessage());
+      log.error("Error processing order {}", orderDto.getOrderId(), e);
       retryProducer.publish(orderDto);
     }
+  }
+
+  public Order process(OrderDto orderDto) {
+    repository.findByOrderId(orderDto.getOrderId())
+        .ifPresent((it) -> {
+          throw new OrderException("Order %s already registered".formatted(orderDto.getOrderId()));
+        });
+
+    validateOrderDate(orderDto.getCreatedAt());
+    BigDecimal totalValue = calculateTotalPrice(orderDto.getItens());
+    Order order = mapper.toEntity(orderDto, totalValue, OrderStatus.FINALIZED);
+
+    repository.save(order);
+    return order;
   }
 
   private void validateOrderDate(LocalDateTime dataPedido) {

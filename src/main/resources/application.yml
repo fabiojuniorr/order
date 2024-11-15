@@ -25,3 +25,5 @@ kafka:
       order-processing: order-processing
       order-processed: order-processed
       retry-processing: retry-processing
+  retry:
+    max-attempt: 5
