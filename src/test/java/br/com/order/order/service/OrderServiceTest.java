@@ -133,16 +133,6 @@ public class OrderServiceTest {
     assertEquals(orderId, result.getOrderId());
   }
 
-  private GetOrdersDto createGetOrderDto(Order order) {
-    return GetOrdersDto.builder()
-        .orderId(order.getOrderId())
-        .createdAt(order.getCreatedAt())
-        .itens(order.getItens())
-        .status(order.getStatus())
-        .totalValue(order.getTotalValue())
-        .build();
-  }
-
   @Test
   @DisplayName("should throw exception when order not found")
   void shouldThrowExceptionWhenOrderNotFound() {
