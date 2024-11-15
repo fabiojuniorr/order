@@ -1,11 +1,11 @@
 package br.com.order.order.model;
 
 import java.math.BigDecimal;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@Builder
 public class Item {
 
   private String productId;

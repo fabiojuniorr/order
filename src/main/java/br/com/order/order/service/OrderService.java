@@ -8,9 +8,9 @@ import br.com.order.order.exception.OrderException;
 import br.com.order.order.kafka.OrderProducer;
 import br.com.order.order.kafka.RetryProducer;
 import br.com.order.order.mapper.OrderMapper;
-import br.com.order.order.model.Item;
 import br.com.order.order.model.Order;
 import br.com.order.order.repository.OrderRepository;
+import br.com.order.order.service.strategy.PriceCalculator;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,24 +50,18 @@ public class OrderService {
         });
 
     validateOrderDate(orderDto.getCreatedAt());
-    BigDecimal totalValue = calculateTotalPrice(orderDto.getItens());
+    BigDecimal totalValue = new PriceCalculator().calculate(orderDto.getItens());
     Order order = mapper.toEntity(orderDto, totalValue, OrderStatus.FINALIZED);
 
     repository.save(order);
     return order;
   }
 
-  private void validateOrderDate(LocalDateTime dataPedido) {
-    if (dataPedido != null && dataPedido.isBefore(LocalDateTime.now())) {
-      throw new IllegalArgumentException(
+  private void validateOrderDate(LocalDateTime createdAt) {
+    if (createdAt != null && createdAt.isBefore(LocalDateTime.now())) {
+      throw new OrderException(
           "The order date must be the current date or a future date.");
     }
-  }
-
-  public BigDecimal calculateTotalPrice(List<Item> itens) {
-    return itens.stream()
-        .map(item -> item.getUnitPrice().multiply(new BigDecimal(item.getAmount())))
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   public Page<GetOrdersDto> getAll(OrderStatus status, Pageable pageable) {
