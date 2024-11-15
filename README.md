@@ -55,6 +55,14 @@ Certifique-se de ter as ferramentas abaixo instaladas:
 
 ## Instruções de Build e Execução
 
+### Docker compose
+1. Rodar kafka local:
+   ```bash
+   docker-compose up -d
+
+### MongoDB Atlas
+   Criar uma instância cluster do mongo no Atlas: https://cloud.mongodb.com/   
+
 ### Backend (Spring Boot)
 
 1. Clone o repositório:
