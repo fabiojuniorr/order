@@ -4,6 +4,8 @@ spring:
   kafka:
     producer:
       bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       group-id: order-id
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -22,3 +24,4 @@ kafka:
     name:
       order-processing: order-processing
       order-processed: order-processed
+      retry-processing: retry-processing

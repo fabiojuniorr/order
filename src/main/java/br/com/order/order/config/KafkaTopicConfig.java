@@ -9,7 +9,7 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic orderRetryTopic() {
-        return new NewTopic("order-retry", 3, (short) 1);
+        return new NewTopic("retry-processing", 3, (short) 1);
     }
 
     @Bean

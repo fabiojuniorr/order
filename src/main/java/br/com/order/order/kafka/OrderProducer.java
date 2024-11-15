@@ -1,6 +1,5 @@
 package br.com.order.order.kafka;
 
-import br.com.order.order.config.JsonObject;
 import br.com.order.order.model.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,19 +15,17 @@ public class OrderProducer {
 	@Value("${kafka.topic.name.order-processed}")
 	private String topicName;
 
-	private final JsonObject jsonObject;
-	private final KafkaTemplate<String, String> kafkaTemplate;
+	private final KafkaTemplate<String, Order> kafkaTemplate;
 
 	public void publish(Order order) {
 		try {
-			log.info("Sending order {} to topic: {}", order.getOrderId(), topicName);
+			log.info("Order Producer - Sending order {} to topic: {}", order.getOrderId(), topicName);
 
-			String json = jsonObject.getInstance().writeValueAsString(order);
-			kafkaTemplate.send(topicName, json);
+			kafkaTemplate.send(topicName, order);
 
-			log.info("Product {} successfully sent to topic: {}", order.getOrderId(), topicName);
+			log.info("Order Producer - Order {} successfully sent to topic: {}", order.getOrderId(), topicName);
 		} catch (Exception e) {
-			log.error("Unable to send product {} to topic: {}", order.getOrderId(), topicName);
+			log.error("Order Producer - Unable to send order {} to topic: {}", order.getOrderId(), topicName);
 		}
 	}
 }
