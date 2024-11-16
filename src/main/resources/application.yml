@@ -7,11 +7,11 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
-      group-id: order-id
+      group-id: order-service-id
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "br.com.order.order.dto"
+        spring.json.trusted.packages: "*"
         spring.json.value.default.type: "br.com.order.order.dto.OrderDto"
       auto-offset-reset: earliest
 

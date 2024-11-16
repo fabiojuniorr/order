@@ -33,8 +33,10 @@ public class OrderService {
 
   public void orderProcess(OrderDto orderDto) {
     try {
+      log.info("Start processing order {}", orderDto.getOrderId());
       Order order = process(orderDto);
       orderProducer.publish(order);
+      log.info("End processing order {}", orderDto.getOrderId());
     } catch (OrderException e) {
       log.error(e.getMessage());
     } catch (Exception e) {
